@@ -1,0 +1,122 @@
+import { State, Action, StateContext, Selector } from '@ngxs/store';
+import {
+  CARD_TYPE,
+  GameStateModel,
+  initialGameState,
+  Person,
+  Starship,
+} from './game.model';
+import { GameActions } from './game.actions';
+import { inject, Injectable } from '@angular/core';
+import { GameService } from './game.service';
+import _ from 'lodash';
+
+@Injectable()
+@State<GameStateModel>({
+  name: 'game',
+  defaults: initialGameState,
+})
+export class GameState {
+  gameService = inject(GameService);
+
+  @Selector()
+  static getScore(state: GameStateModel) {
+    return state.score;
+  }
+
+  @Selector()
+  static getCards(state: GameStateModel) {
+    return state.cards;
+  }
+
+  @Selector()
+  static getWinner(state: GameStateModel) {
+    return state.winner;
+  }
+
+  @Selector()
+  static getCardsType(state: GameStateModel) {
+    return state.cardsType;
+  }
+
+  @Action(GameActions.SetCards)
+  setCards(
+    { dispatch, getState, patchState }: StateContext<GameStateModel>,
+    { cards }: GameActions.SetCards
+  ) {
+    const state = getState();
+
+    const winner = this.gameService.compareCards(cards, state.cardsType);
+
+    if (winner > 0) {
+      dispatch(new GameActions.IncreasePlayerScore(winner));
+    }
+
+    patchState({
+      cards,
+      winner,
+    });
+  }
+
+  @Action(GameActions.SetCardsType)
+  setCardsType(
+    { patchState }: StateContext<GameStateModel>,
+    { cardsType }: GameActions.SetCardsType
+  ) {
+    patchState({
+      cardsType,
+    });
+  }
+
+  @Action(GameActions.IncreasePlayerScore)
+  increasePlayerScore(
+    { getState, patchState }: StateContext<GameStateModel>,
+    { player }: GameActions.IncreasePlayerScore
+  ) {
+    const state = getState();
+    const score = { ...state.score };
+    const playerScore = _.get(score, 'player' + player) + 1;
+    _.set(score, 'player' + player, playerScore);
+
+    patchState({
+      score,
+    });
+  }
+
+  @Action(GameActions.NewGame)
+  newGame({ dispatch, patchState }: StateContext<GameStateModel>) {
+    patchState({
+      score: {
+        player1: 0,
+        player2: 0,
+      },
+    });
+
+    dispatch(new GameActions.NextTurn(CARD_TYPE.PEOPLE));
+  }
+
+  @Action(GameActions.NextTurn)
+  nextTurn(
+    { dispatch, patchState }: StateContext<GameStateModel>,
+    { cardsType }: GameActions.NextTurn
+  ) {
+    patchState({
+      winner: null,
+    });
+
+    let request = null;
+
+    switch (cardsType) {
+      case CARD_TYPE.PEOPLE:
+        request = this.gameService.getCards<Person>(cardsType);
+        break;
+      case CARD_TYPE.STARSHIPS:
+        request = this.gameService.getCards<Starship>(cardsType);
+        break;
+    }
+
+    return request.then((cards) => {
+      dispatch(new GameActions.SetCards(cards));
+    });
+  }
+}
