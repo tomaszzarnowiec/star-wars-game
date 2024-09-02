@@ -1,16 +1,26 @@
-<button (click)="newGame()">NewGame</button>
-<button (click)="nextTurn()">next turn</button>
-<p>
-  <span *ngIf="wins$ | async">player {{ wins$ | async }} wins</span>
-</p>
-
 <div class="game">
+  <div class="game-score">
+    <span class="game-score-number">
+      {{ (score$ | async)?.player1 || 0 }} :
+      {{ (score$ | async)?.player2 || 0 }}
+    </span>
+    <p class="game-score-wins">
+      <span *ngIf="(wins$ | async) === 0">Draw</span>
+      <span *ngIf="wins$ | async">Player {{ wins$ | async }} wins</span>
+    </p>
+  </div>
   <div class="game-container">
     <app-game-card
+      [isWinner]="(wins$ | async) === 1"
       [cardData]="(cards$ | async)?.player1 || null"
     ></app-game-card>
     <app-game-card
+      [isWinner]="(wins$ | async) === 2"
       [cardData]="(cards$ | async)?.player2 || null"
     ></app-game-card>
+  </div>
+  <div class="game-actions">
+    <button mat-button (click)="newGame()">New game</button>
+    <button mat-flat-button (click)="nextTurn()">Next turn</button>
   </div>
 </div>

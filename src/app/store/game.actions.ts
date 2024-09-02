@@ -1,4 +1,4 @@
-import { CARD_TYPE, Cards, Person, Starship } from './game.model';
+import { CARD_TYPE, Cards, People, Starship } from './game.model';
 
 export namespace GameActions {
   export class SetCards {

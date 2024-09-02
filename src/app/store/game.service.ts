@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CARD_TYPE, Cards } from './game.model';
-import _, { get } from 'lodash';
+import _ from 'lodash';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
@@ -12,15 +12,18 @@ export class GameService {
       .then((response) => {
         return response.json();
       })
-      .then((data) => {
-        console.log('data', data);
-        if (data.detail) {
+      .then((data: any) => {
+        if (
+          data.detail ||
+          (type === CARD_TYPE.PEOPLE && data.mass === 'unknown') ||
+          (type === CARD_TYPE.STARSHIPS && data.crew === 'unknown')
+        ) {
           return this.getResource<T>(type);
         }
+
         return data as T;
       })
       .catch((error) => {
-        console.error('Error:', error);
         return this.getResource<T>(type);
       });
   }
@@ -37,8 +40,12 @@ export class GameService {
   compareCards(cards: Cards, cardsType: CARD_TYPE) {
     const compareBy = cardsType === CARD_TYPE.PEOPLE ? 'mass' : 'crew';
 
-    const player1Value = _.get(cards.player1, compareBy) || 0;
-    const player2Value = _.get(cards.player2, compareBy) || 0;
+    const player1Value = parseFloat(
+      _(cards.player1).get(compareBy)?.replaceAll(',', '') as string
+    );
+    const player2Value = parseFloat(
+      _(cards.player2).get(compareBy)?.replaceAll(',', '') as string
+    );
 
     const winner =
       player1Value > player2Value ? 1 : player1Value < player2Value ? 2 : 0;

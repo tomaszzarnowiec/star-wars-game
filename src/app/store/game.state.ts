@@ -3,7 +3,7 @@ import {
   CARD_TYPE,
   GameStateModel,
   initialGameState,
-  Person,
+  People,
   Starship,
 } from './game.model';
 import { GameActions } from './game.actions';
@@ -74,12 +74,14 @@ export class GameState {
     { player }: GameActions.IncreasePlayerScore
   ) {
     const state = getState();
-    const score = { ...state.score };
-    const playerScore = _.get(score, 'player' + player) + 1;
-    _.set(score, 'player' + player, playerScore);
+    const scoreKey = `player${player}`;
+    const newScore = _.get(state.score, scoreKey, 0) + 1;
 
     patchState({
-      score,
+      score: {
+        ...state.score,
+        [scoreKey]: newScore,
+      },
     });
   }
 
@@ -100,23 +102,21 @@ export class GameState {
     { dispatch, patchState }: StateContext<GameStateModel>,
     { cardsType }: GameActions.NextTurn
   ) {
-    patchState({
-      winner: null,
-    });
+    patchState({ winner: null });
+    console.log('next turn', cardsType);
 
-    let request = null;
+    let request;
 
-    switch (cardsType) {
-      case CARD_TYPE.PEOPLE:
-        request = this.gameService.getCards<Person>(cardsType);
-        break;
-      case CARD_TYPE.STARSHIPS:
-        request = this.gameService.getCards<Starship>(cardsType);
-        break;
+    if (cardsType === CARD_TYPE.PEOPLE) {
+      request = this.gameService.getCards<People>(cardsType);
+    } else if (cardsType === CARD_TYPE.STARSHIPS) {
+      request = this.gameService.getCards<Starship>(cardsType);
     }
 
-    return request.then((cards) => {
-      dispatch(new GameActions.SetCards(cards));
+    return request?.then((cards) => {
+      console.log('cards rquests', cards);
+
+      return dispatch(new GameActions.SetCards(cards));
     });
   }
 }

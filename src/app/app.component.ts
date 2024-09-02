@@ -8,11 +8,12 @@ import { GameState } from './store/game.state';
 import _ from 'lodash';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { GameCardComponent } from './game-card/game-card.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NgIf, AsyncPipe, GameCardComponent],
+  imports: [RouterOutlet, NgIf, AsyncPipe, GameCardComponent, MatButtonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
@@ -31,15 +32,15 @@ export class AppComponent implements OnInit {
     this.newGame();
 
     this.cards$.subscribe((cards) => {
-      console.log('cards', cards);
+      console.log('component cards', cards);
     });
 
     this.score$.subscribe((score) => {
-      console.log('score', score);
+      console.log('component score', score);
     });
 
     this.wins$.subscribe((wins) => {
-      console.log('wins', wins);
+      console.log('component wins', wins);
     });
   }
 

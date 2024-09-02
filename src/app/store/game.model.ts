@@ -23,14 +23,7 @@ export const initialGameState: GameStateModel = {
   cardsType: CARD_TYPE.PEOPLE,
 };
 
-export interface Person {
-  properties: PersonProperties;
-  description: string;
-  _id: string;
-  uid: string;
-}
-
-interface PersonProperties {
+export interface People {
   height: string;
   mass: string;
   hair_color: string;
@@ -46,13 +39,6 @@ interface PersonProperties {
 }
 
 export interface Starship {
-  properties: StarshipProperties;
-  description: string;
-  _id: string;
-  uid: string;
-}
-
-interface StarshipProperties {
   model: string;
   starship_class: string;
   manufacturer: string;
@@ -73,8 +59,8 @@ interface StarshipProperties {
 }
 
 export interface Cards {
-  player1: Person | Starship | null;
-  player2: Person | Starship | null;
+  player1: People | Starship | null;
+  player2: People | Starship | null;
 }
 
 export interface Score {
