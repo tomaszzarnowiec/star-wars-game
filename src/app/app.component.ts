@@ -30,18 +30,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.newGame();
-
-    this.cards$.subscribe((cards) => {
-      console.log('component cards', cards);
-    });
-
-    this.score$.subscribe((score) => {
-      console.log('component score', score);
-    });
-
-    this.wins$.subscribe((wins) => {
-      console.log('component wins', wins);
-    });
   }
 
   setCardsType(cardsType: CARD_TYPE) {

@@ -8,7 +8,7 @@ import {
 } from './game.model';
 import { GameActions } from './game.actions';
 import { inject, Injectable } from '@angular/core';
-import { GameService } from './game.service';
+import { GameService } from '../services/game.service';
 import _ from 'lodash';
 
 @Injectable()

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CARD_TYPE, Cards } from './game.model';
+import { CARD_TYPE, Cards } from '../store/game.model';
 import _ from 'lodash';
 
 @Injectable({ providedIn: 'root' })
@@ -13,6 +13,7 @@ export class GameService {
         return response.json();
       })
       .then((data: any) => {
+        // if there is error with details or any of card will have unknown data, try again
         if (
           data.detail ||
           (type === CARD_TYPE.PEOPLE && data.mass === 'unknown') ||
@@ -40,12 +41,11 @@ export class GameService {
   compareCards(cards: Cards, cardsType: CARD_TYPE) {
     const compareBy = cardsType === CARD_TYPE.PEOPLE ? 'mass' : 'crew';
 
-    const player1Value = parseFloat(
-      _(cards.player1).get(compareBy)?.replaceAll(',', '') as string
-    );
-    const player2Value = parseFloat(
-      _(cards.player2).get(compareBy)?.replaceAll(',', '') as string
-    );
+    const getComparsionValue = (player: any, compareBy: string) => {
+      return parseFloat(player[compareBy].replaceAll(',', ''));
+    };
+    const player1Value = getComparsionValue(cards.player1, compareBy);
+    const player2Value = getComparsionValue(cards.player2, compareBy);
 
     const winner =
       player1Value > player2Value ? 1 : player1Value < player2Value ? 2 : 0;
