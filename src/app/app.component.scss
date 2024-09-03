@@ -1,4 +1,9 @@
 .game {
+  &-selector {
+    padding: 1rem;
+    max-width: 300px;
+    margin: 0 auto;
+  }
   &-score {
     font-size: 1.2rem;
     text-align: center;

@@ -60,12 +60,14 @@ export class GameState {
 
   @Action(GameActions.SetCardsType)
   setCardsType(
-    { patchState }: StateContext<GameStateModel>,
+    { dispatch, patchState }: StateContext<GameStateModel>,
     { cardsType }: GameActions.SetCardsType
   ) {
     patchState({
       cardsType,
     });
+
+    dispatch(new GameActions.NewGame(cardsType));
   }
 
   @Action(GameActions.IncreasePlayerScore)
@@ -86,7 +88,10 @@ export class GameState {
   }
 
   @Action(GameActions.NewGame)
-  newGame({ dispatch, patchState }: StateContext<GameStateModel>) {
+  newGame(
+    { dispatch, patchState }: StateContext<GameStateModel>,
+    { cardsType }: GameActions.NewGame
+  ) {
     patchState({
       score: {
         player1: 0,
@@ -94,7 +99,7 @@ export class GameState {
       },
     });
 
-    dispatch(new GameActions.NextTurn(CARD_TYPE.PEOPLE));
+    dispatch(new GameActions.NextTurn(cardsType));
   }
 
   @Action(GameActions.NextTurn)

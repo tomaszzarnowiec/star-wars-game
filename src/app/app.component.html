@@ -1,4 +1,15 @@
 <div class="game">
+  <div class="game-selector">
+    <mat-select
+      placeholder="Select a game"
+      [(value)]="cardsType"
+      (selectionChange)="setCardsType($event)"
+    >
+      <mat-option *ngFor="let type of cardsTypes" [value]="type">
+        {{ type }}
+      </mat-option>
+    </mat-select>
+  </div>
   <div class="game-score">
     <span class="game-score-number">
       {{ (score$ | async)?.player1 || 0 }} :
@@ -12,10 +23,12 @@
   <div class="game-container">
     <app-game-card
       [isWinner]="(wins$ | async) === 1"
+      [cardType]="cardsType"
       [cardData]="(cards$ | async)?.player1 || null"
     ></app-game-card>
     <app-game-card
       [isWinner]="(wins$ | async) === 2"
+      [cardType]="cardsType"
       [cardData]="(cards$ | async)?.player2 || null"
     ></app-game-card>
   </div>

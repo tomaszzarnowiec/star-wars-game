@@ -18,6 +18,7 @@ export namespace GameActions {
 
   export class NewGame {
     static readonly type = '[Game] New Game';
+    constructor(public cardsType: CARD_TYPE) {}
   }
 
   export class NextTurn {
