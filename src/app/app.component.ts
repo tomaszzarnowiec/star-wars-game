@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { GameActions } from './store/game.actions';
 import { CARD_TYPE, Cards, Score } from './store/game.model';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { GameState } from './store/game.state';
 import _ from 'lodash';
 import { AsyncPipe, NgIf } from '@angular/common';

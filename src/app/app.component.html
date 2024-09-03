@@ -20,7 +20,11 @@
     ></app-game-card>
   </div>
   <div class="game-actions">
-    <button mat-button (click)="newGame()">New game</button>
-    <button mat-flat-button (click)="nextTurn()">Next turn</button>
+    <button class="game-actions-new" mat-button (click)="newGame()">
+      New game
+    </button>
+    <button class="game-actions-next" mat-flat-button (click)="nextTurn()">
+      Next turn
+    </button>
   </div>
 </div>
