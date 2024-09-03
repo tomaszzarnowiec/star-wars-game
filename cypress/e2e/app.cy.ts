@@ -25,7 +25,7 @@ describe('Star wars Game e2e testing', () => {
     });
   });
 
-  it('Starts the game and check if one of card will have "wins" class', () => {
+  it('Starts the new game and check if one of card will have "wins" class', () => {
     cy.visit('/');
     cy.get('.game .game-actions-new').click();
     cy.get('.game .card.wins').should('have.length', 1);
@@ -39,5 +39,11 @@ describe('Star wars Game e2e testing', () => {
       cy.get('.game .game-actions-next').click();
       cy.get('.game .game-score-number').should('not.contain', score);
     });
+  });
+
+  it('Starts new round and check if one of card will have "wins" class', () => {
+    cy.visit('/');
+    cy.get('.game .game-actions-next').click();
+    cy.get('.game .card.wins').should('have.length', 1);
   });
 });
