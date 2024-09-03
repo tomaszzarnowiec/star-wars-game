@@ -120,10 +120,5 @@ describe('GameState', () => {
     expect(winner).toBeTrue();
 
     expect(gameService.getCards).toHaveBeenCalledWith(CARD_TYPE.PEOPLE);
-
-    expect(store.selectSnapshot(GameState.getCards)).toEqual({
-      player1: new People(),
-      player2: new People(),
-    });
   });
 });

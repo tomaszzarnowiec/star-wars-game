@@ -25,6 +25,7 @@ export class GameService {
         return data as T;
       })
       .catch((error) => {
+        console.error(error);
         return this.getResource<T>(type);
       });
   }
@@ -44,6 +45,7 @@ export class GameService {
     const getComparsionValue = (player: any, compareBy: string) => {
       return parseFloat(player[compareBy].replaceAll(',', ''));
     };
+
     const player1Value = getComparsionValue(cards.player1, compareBy);
     const player2Value = getComparsionValue(cards.player2, compareBy);
 
